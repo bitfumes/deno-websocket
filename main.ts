@@ -15,6 +15,9 @@ async function main() {
         console.log("Websocker connection stablished");
         for await (const event of ws) {
           console.log(event);
+          if (typeof event === "string") {
+            ws.send("event");
+          }
           if (isWebSocketCloseEvent(event)) {
             console.log("WebSocket connection closed");
           }
