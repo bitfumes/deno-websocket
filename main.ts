@@ -38,12 +38,30 @@ async function handleWebSocket(ws: WebSocket): Promise<void> {
       if (data.type === "register") {
         connections.push({ name: data.name, ws });
         ws.send(`${data.name}, you are registered`);
+        const onlineUsers = JSON.stringify({
+          type: "online",
+          message: { users: connections.map((connection) => connection.name) },
+        });
+        ws.send(onlineUsers);
+        const ev = JSON.stringify({
+          type: "join",
+          message: { name: data.name },
+        });
+        broadcastEvents(ws, ev);
       } else {
         broadcastEvents(ws, event);
       }
     }
     if (isWebSocketCloseEvent(event)) {
       console.log("WebSocket connection closed");
+      const currentConn = connections.filter((c) => c.ws == ws);
+      if (currentConn.length == 1) {
+        const ev = JSON.stringify({
+          type: "leaved",
+          message: { name: currentConn[0].name },
+        });
+        broadcastEvents(ws, ev);
+      }
     }
   }
 }
