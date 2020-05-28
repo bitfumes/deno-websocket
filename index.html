@@ -30,6 +30,9 @@
           if (data.type === "online") {
             data.message.users.map((user) => addUsers(user));
           }
+          if (data.type === "leaved") {
+            removeUser(data.message.name);
+          }
         } catch (e) {
           return false;
         }
@@ -55,6 +58,16 @@
         const li = document.createElement("li");
         li.innerText = name;
         ul.appendChild(li);
+      }
+
+      function removeUser(name) {
+        const ul = document.getElementById("online-users");
+        const lis = ul.querySelectorAll("li");
+        Array.from(lis).map((li) => {
+          if (li.innerText == name) {
+            li.remove();
+          }
+        });
       }
     </script>
   </body>
