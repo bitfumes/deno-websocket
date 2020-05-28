@@ -62,6 +62,7 @@ async function handleWebSocket(ws: WebSocket): Promise<void> {
         });
         broadcastEvents(ws, ev);
       }
+      connections.splice(connections.indexOf(currentConn[0]), 1);
     }
   }
 }
