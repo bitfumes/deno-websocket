@@ -6,8 +6,18 @@
     <title>Chat App</title>
   </head>
   <body>
-    <input type="text" id="input" />
-    <button onClick="send()">Send</button>
+    <div>
+      <input
+        type="text"
+        id="register-input"
+        placeholder="Register with your name"
+      />
+      <button onClick="register()">Register</button>
+    </div>
+    <div style="margin-top: 10px;">
+      <input type="text" id="input" placeholder="Type your message" />
+      <button onClick="send()">Send</button>
+    </div>
     <script>
       const ws = new WebSocket("ws://localhost:8080");
       ws.addEventListener("message", function (event) {
@@ -17,6 +27,15 @@
         const input = document.getElementById("input");
         input.value;
         ws.send(input.value);
+      }
+
+      function register() {
+        const registerInput = document.getElementById("register-input");
+        const data = JSON.stringify({
+          type: "register",
+          name: registerInput.value,
+        });
+        ws.send(data);
       }
     </script>
   </body>
