@@ -29,13 +29,18 @@ async function main() {
   }
 }
 
-const connections = new Array<WebSocket>();
+const connections = new Array<{ name: string; ws: WebSocket }>();
 async function handleWebSocket(ws: WebSocket): Promise<void> {
   console.log("Websocket connection stablished");
-  connections.push(ws);
   for await (const event of ws) {
     if (typeof event === "string") {
-      broadcastEvents(ws, event);
+      const data = JSON.parse(event);
+      if (data.type === "register") {
+        connections.push({ name: data.name, ws });
+        ws.send(`${data.name}, you are registered`);
+      } else {
+        broadcastEvents(ws, event);
+      }
     }
     if (isWebSocketCloseEvent(event)) {
       console.log("WebSocket connection closed");
@@ -44,9 +49,9 @@ async function handleWebSocket(ws: WebSocket): Promise<void> {
 }
 
 function broadcastEvents(ws: WebSocket, event: string) {
-  for (const websocket of connections) {
-    if (websocket !== ws) {
-      websocket.send(event);
+  for (const connection of connections) {
+    if (connection.ws !== ws) {
+      connection.ws.send(event);
     }
   }
 }
