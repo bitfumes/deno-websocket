@@ -15,7 +15,16 @@ async function main() {
         handleWebSocket
       );
     } else {
-      req.respond({ body: "Not Found", status: 404 });
+      if (req.method === "GET" && req.url === "/") {
+        req.respond({
+          headers: new Headers({
+            "content-type": "text/html",
+          }),
+          body: await Deno.open("./index.html"),
+        });
+      } else {
+        req.respond({ body: "Not Found", status: 404 });
+      }
     }
   }
 }
