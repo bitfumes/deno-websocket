@@ -30,7 +30,7 @@
           if (data.type === "online") {
             data.message.users.map((user) => addUsers(user));
           }
-          if (data.type === "leaved") {
+          if (data.type === "left") {
             removeUser(data.message.name);
           }
         } catch (e) {
