@@ -32,7 +32,11 @@ function handleRegister(
   data: { name: string; type: string }
 ) {
   connections.push({ name: data.name, ws });
-  ws.send(`${data.name}, you are registered`);
+  const registered = JSON.stringify({
+    type: "registered",
+    message: `${data.name}, you are registered`,
+  });
+  ws.send(registered);
   const onlineUsers = JSON.stringify({
     type: "online",
     message: { users: connections.map((connection) => connection.name) },

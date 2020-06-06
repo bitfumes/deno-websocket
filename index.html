@@ -6,7 +6,7 @@
     <title>Chat App</title>
   </head>
   <body>
-    <div>
+    <div id="register-form">
       <input
         type="text"
         id="register-input"
@@ -14,6 +14,7 @@
       />
       <button onClick="register()">Register</button>
     </div>
+    <h3 id="registered-user"></h3>
     <div style="margin-top: 10px;">
       <input type="text" id="input" placeholder="Type your message" />
       <button onClick="send()">Send</button>
@@ -32,6 +33,13 @@
           }
           if (data.type === "left") {
             removeUser(data.message.name);
+          }
+          if (data.type === "registered") {
+            const registerForm = document.getElementById("register-form");
+            const h3 = document.getElementById("registered-user");
+            const input = document.getElementById("register-input");
+            registerForm.style.display = "none";
+            h3.innerText = input.value;
           }
         } catch (e) {
           return false;
