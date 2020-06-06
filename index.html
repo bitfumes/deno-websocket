@@ -19,7 +19,11 @@
       <input type="text" id="input" placeholder="Type your message" />
       <button onClick="send()">Send</button>
     </div>
+    <h4>Online Users</h4>
     <ul id="online-users"></ul>
+
+    <h4>Messages</h4>
+    <ul id="messages"></ul>
     <script>
       const ws = new WebSocket("ws://localhost:8080");
       ws.addEventListener("message", function (event) {
@@ -41,6 +45,9 @@
             registerForm.style.display = "none";
             h3.innerText = input.value;
           }
+          if (data.type === "message") {
+            addMessage(data.message, data.user);
+          }
         } catch (e) {
           return false;
         }
@@ -48,8 +55,15 @@
       });
       function send() {
         const input = document.getElementById("input");
-        input.value;
-        ws.send(input.value);
+        const userH3 = document.getElementById("registered-user");
+        const data = JSON.stringify({
+          type: "message",
+          message: input.value,
+          user: userH3.innerText,
+        });
+        ws.send(data);
+        addMessage(input.value, "You");
+        input.value = "";
       }
 
       function register() {
@@ -65,6 +79,13 @@
         const ul = document.getElementById("online-users");
         const li = document.createElement("li");
         li.innerText = name;
+        ul.appendChild(li);
+      }
+
+      function addMessage(message, user) {
+        const ul = document.getElementById("messages");
+        const li = document.createElement("li");
+        li.innerText = `${user} - ${message}`;
         ul.appendChild(li);
       }
 

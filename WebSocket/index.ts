@@ -16,6 +16,8 @@ export default async function handleWebSocket(ws: WebSocket): Promise<void> {
       const data = JSON.parse(event);
       if (data.type === "register") {
         handleRegister(connections, ws, data);
+      } else if (data.type === "message") {
+        broadcastEvents(ws, event);
       } else {
         broadcastEvents(ws, event);
       }
